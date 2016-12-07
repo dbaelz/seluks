@@ -19,20 +19,25 @@ if [ "$1" == "validate" ]; then
 	[[ -z "$mapper" ]] && printf "ERROR: Missing variable 'mapper'\n" || ((noErrorCount++))
 	[[ -z "$mountpoint" ]] && printf "ERROR: Missing variable 'mountpoint'\n" || ((noErrorCount++))
 	[[ -z "$filesystem" ]] && printf "ERROR: Missing variable 'filesystem'\n" || ((noErrorCount++))
-	[[ $noErrorCount -eq 4  ]] && printf "SUCCESS: No missing variables\n" || exit
+	[[ $noErrorCount -eq 4 ]] && printf "SUCCESS: No missing variables\n" || exit
 
 	noErrorCount=0
 	[[ ! -f $workingDir/$container ]] && printf "ERROR: Container $workingDir/$container doesn't exist\n" || ((noErrorCount++))
 	[[ ! -d $mountpoint ]] && printf "ERROR: Mountpoint $mountpoint doesn't exist\n" || ((noErrorCount++))
-	[[ $noErrorCount -eq 2  ]] && printf "SUCCESS: Container file and mountpoint exist\n" || exit
+	[[ $noErrorCount -eq 2 ]] && printf "SUCCESS: Container file and mountpoint exist\n" || exit
 
 elif [ "$1" == "open" ]; then
-	printf "INFO: Open container $container\n"
+	printf "INFO: Open container $container\n\n"
 	loopDevice=`sudo losetup -f`
 
 	if [ "`losetup -a | grep -c "$container"`" != "0" ]; then
-	        printf "\nERROR: Container $container already in use\n"
-	        exit -1
+		printf "ERROR: Container $container already in use\n"
+		exit -1
+	fi
+
+	if [ -b "/dev/mapper/$mapper" ]; then
+		printf "ERROR: Mapper /dev/mapper/$mapper already in use\n"
+		exit -1
 	fi
 
 	sudo /sbin/losetup $loopDevice $container
@@ -41,11 +46,12 @@ elif [ "$1" == "open" ]; then
 	printf "\nSUCCESS: Opened container $container\n"
 
 elif [ "$1" == "close" ]; then
-	printf "INFO: Close container $container\n"
+	printf "INFO: Close container $container\n\n"
+
 	loopDevice=`sudo losetup -a | grep "$container" | sed "s/: .*//"`
 
 	if [ "`sudo losetup -a | grep -c "$container"`" != "1" ]; then
-		printf "\nERROR: Container $container not in use\n"
+		printf "ERROR: Container $container not in use\n"
 		exit -1
 	fi
 
