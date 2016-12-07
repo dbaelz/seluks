@@ -1,6 +1,7 @@
 #!/bin/bash
 
-configFile="$(pwd)/seluks.config"
+workingDir=$(pwd)
+configFile="$workingDir/seluks.config"
 
 if [ ! -e $configFile ]
 then
@@ -11,15 +12,19 @@ else
 fi
 
 if [ "$1" == "validate" ]; then
-	printf "INFO: Validate $configFile\n"
+	printf "INFO: Validate $configFile\n\n"
 
 	noErrorCount=0
 	[[ -z "$container" ]] && printf "ERROR: Missing variable 'container'\n" || ((noErrorCount++))
 	[[ -z "$mapper" ]] && printf "ERROR: Missing variable 'mapper'\n" || ((noErrorCount++))
 	[[ -z "$mountpoint" ]] && printf "ERROR: Missing variable 'mountpoint'\n" || ((noErrorCount++))
 	[[ -z "$filesystem" ]] && printf "ERROR: Missing variable 'filesystem'\n" || ((noErrorCount++))
+	[[ $noErrorCount -eq 4  ]] && printf "SUCCESS: No missing variables\n" || exit
 
-	[[ $noErrorCount -eq 4  ]] && printf "\nSUCCESS: No missing variables\n"
+	noErrorCount=0
+	[[ ! -f $workingDir/$container ]] && printf "ERROR: Container $workingDir/$container doesn't exist\n" || ((noErrorCount++))
+	[[ ! -d $mountpoint ]] && printf "ERROR: Mountpoint $mountpoint doesn't exist\n" || ((noErrorCount++))
+	[[ $noErrorCount -eq 2  ]] && printf "SUCCESS: Container file and mountpoint exist\n" || exit
 
 elif [ "$1" == "open" ]; then
 	printf "INFO: Open container $container\n"
