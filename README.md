@@ -3,13 +3,19 @@ It's just a simple bash script to open and close [LUKS container](https://en.wik
 
 Usage
 -----
-1. Create a `seluks.config` file in the same directory as your container file. See the example file for the configuration.
-2. Execute the script with the _open_ or _close_ parameter.
+1. Create a `seluks.config` file in the same directory as your container file. See the [example](https://github.com/dbaelz/seluks/blob/master/seluks.config.example) for the required variables.
+2. Optional: Add the script to the `$PATH` variable
+3. Execute it with the `validate`, `open` or `close` parameter.
+
+Example:
+```
+seluks.sh open
+```
 
 Current status
 --------------
-* No verification of the config file and the variables
-* No error handling
+* Basic verification of the config file and the variables
+* Rudimentary error handling
 * Hardcoded usage of the _sudo_ command
 * Usage of some Linux tools without checks
 * Only tested with Ubuntu 16.04
