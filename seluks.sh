@@ -22,7 +22,7 @@ if [ "$1" == "validate" ]; then
 	[[ $noErrorCount -eq 4 ]] && printf "SUCCESS: No missing variables\n" || exit
 
 	noErrorCount=0
-	[[ ! -f $workingDir/$container ]] && printf "ERROR: Container $workingDir/$container doesn't exist\n" || ((noErrorCount++))
+	[[ ! -f $container ]] && printf "ERROR: Container $workingDir/$container doesn't exist\n" || ((noErrorCount++))
 	[[ ! -d $mountpoint ]] && printf "ERROR: Mountpoint $mountpoint doesn't exist\n" || ((noErrorCount++))
 	[[ $noErrorCount -eq 2 ]] && printf "SUCCESS: Container file and mountpoint exist\n" || exit
 
