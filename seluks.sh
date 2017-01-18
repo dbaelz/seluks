@@ -11,7 +11,7 @@ else
 	source $configFile
 fi
 
-if [ "$1" == "validate" ]; then
+if [ "$1" == "validate" ] || [ "$1" == "v" ]; then
 	printf "INFO: Validate $configFile\n\n"
 
 	noErrorCount=0
@@ -26,7 +26,7 @@ if [ "$1" == "validate" ]; then
 	[[ ! -d $mountpoint ]] && printf "ERROR: Mountpoint $mountpoint doesn't exist\n" || ((noErrorCount++))
 	[[ $noErrorCount -eq 2 ]] && printf "SUCCESS: Container file and mountpoint exist\n" || exit
 
-elif [ "$1" == "open" ]; then
+elif [ "$1" == "open" ] || [ "$1" == "o" ]; then
 	printf "INFO: Open container $container\n\n"
 	loopDevice=`sudo losetup -f`
 
@@ -45,7 +45,7 @@ elif [ "$1" == "open" ]; then
 	sudo /bin/mount -t $filesystem /dev/mapper/$mapper $mountpoint
 	printf "\nSUCCESS: Opened container $container\n"
 
-elif [ "$1" == "close" ]; then
+elif [ "$1" == "close" ] || [ "$1" == "c" ]; then
 	printf "INFO: Close container $container\n\n"
 
 	loopDevice=`sudo losetup -a | grep "$container" | sed "s/: .*//"`
@@ -58,8 +58,9 @@ elif [ "$1" == "close" ]; then
 	sudo /bin/umount $mountpoint
 	sudo /sbin/cryptsetup luksClose $mapper
 	sudo /sbin/losetup -d $loopDevice
-	printf "\nSUCCESS: Close container $container\n"
+	printf "\nSUCCESS: Closed container $container\n"
 
 else
-	printf "ERROR: Mode parameter is required. Allowed values: 'validate', 'open' or 'close'\n"
+	printf "ERROR: Mode parameter is required.\n"
+	printf "ERROR: Allowed values: 'validate', 'open' or 'close' or the abbreviation 'v, 'o' or 'c'.\n"
 fi
