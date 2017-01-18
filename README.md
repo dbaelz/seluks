@@ -16,7 +16,6 @@ Current status
 --------------
 * Basic verification of the config file and the variables
 * Rudimentary error handling
-* Hardcoded usage of the _sudo_ command
 * Usage of some Linux tools without checks
 * Only tested with Ubuntu 16.04
 

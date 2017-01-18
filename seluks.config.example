@@ -2,3 +2,4 @@ container=foobar
 mapper=foobar
 mountpoint=/media/user/foobar
 filesystem=ext4
+sudo=true
